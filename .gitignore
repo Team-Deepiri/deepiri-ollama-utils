@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+*.pycrequired-models.txt
+*.egg-info/
+required-models.txt
+.pytest_cache/
