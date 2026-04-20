@@ -1,4 +1,4 @@
-# deepiri-ollama
+# deepiri-ollama-utils
 
 CLI tool to check and validate Ollama models.
 
