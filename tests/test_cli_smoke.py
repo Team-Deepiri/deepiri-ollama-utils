@@ -1,5 +1,6 @@
 import asyncio
 import json
+import subprocess
 
 import httpx
 
@@ -155,3 +156,41 @@ def test_cli_verify_models_requires_model(capsys):
     assert output["missing"] == []
     assert output["all_present"] is False
     assert output["message"] == "Missing --model"
+
+
+def test_cli_delegates_gpu_commands_with_arguments_unchanged(monkeypatch):
+    calls = []
+
+    def fake_run(args, check):
+        calls.append((args, check))
+        return subprocess.CompletedProcess(args, 0)
+
+    monkeypatch.setattr("deepiri_ollama.cli.subprocess.run", fake_run)
+    forwarded_args = ["--format", "json", "--workload=coding", "--", "literal"]
+
+    for command in cli.DELEGATED_COMMANDS:
+        assert cli.main([command, *forwarded_args]) == 0
+
+    assert calls == [
+        (["deepiri-gpu", command, *forwarded_args], False)
+        for command in cli.DELEGATED_COMMANDS
+    ]
+
+
+def test_cli_returns_delegated_nonzero_exit_code(monkeypatch):
+    def fake_run(args, check):
+        return subprocess.CompletedProcess(args, 23)
+
+    monkeypatch.setattr("deepiri_ollama.cli.subprocess.run", fake_run)
+
+    assert cli.main(["model-fit", "llama3:8b"]) == 23
+
+
+def test_cli_reports_missing_deepiri_gpu(monkeypatch, capsys):
+    def fake_run(args, check):
+        raise FileNotFoundError
+
+    monkeypatch.setattr("deepiri_ollama.cli.subprocess.run", fake_run)
+
+    assert cli.main(["capacity"]) == 127
+    assert "deepiri-gpu was not found" in capsys.readouterr().err

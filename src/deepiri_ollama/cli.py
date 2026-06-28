@@ -1,7 +1,26 @@
 import argparse
 import asyncio
 import json
+import subprocess
+import sys
 from .runtime import check, has_model, is_ollama_running, verify_models
+
+
+DELEGATED_COMMANDS = ("model-matrix", "capacity", "workload", "model-fit")
+
+
+def _delegate_to_deepiri_gpu(args):
+    try:
+        result = subprocess.run(["deepiri-gpu", *args], check=False)
+    except FileNotFoundError:
+        print(
+            "deepiri-gpu was not found. Install deepiri-gpu-utils and ensure "
+            "the deepiri-gpu executable is on PATH.",
+            file=sys.stderr,
+        )
+        return 127
+
+    return result.returncode
 
 
 def _load_model_names_from_file(file_path):
@@ -19,16 +38,28 @@ def _load_model_names_from_file(file_path):
 
 
 def main(argv=None):
+    raw_args = list(sys.argv[1:] if argv is None else argv)
+
+    if raw_args and raw_args[0] in DELEGATED_COMMANDS:
+        return _delegate_to_deepiri_gpu(raw_args)
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "command",
-        choices=["check", "models", "has-model", "verify-models", "verify-models-file"],
+        choices=[
+            "check",
+            "models",
+            "has-model",
+            "verify-models",
+            "verify-models-file",
+            *DELEGATED_COMMANDS,
+        ],
     )
     parser.add_argument("--base-url", default="http://localhost:11434")
     parser.add_argument("--model", action="append", help="Model name to check")
     parser.add_argument("--file", help="File with one required model per line")
 
-    args = parser.parse_args(argv)
+    args = parser.parse_args(raw_args)
 
     if args.command == "check":
         result = asyncio.run(check(args.base_url))
