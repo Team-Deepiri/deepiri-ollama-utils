@@ -13,9 +13,9 @@ VRAM, model-fit, workload, and capacity decisions come directly from the
 - Ollama for commands that inspect or modify installed models
 - `deepiri-gpu-utils` for recommendation and sizing commands
 
-Python 3.11 is required because the inspected `deepiri-gpu-utils` package
-requires Python 3.11. Until a tagged release containing the model-management
-APIs is confirmed, `pyproject.toml` pins the exact inspected upstream commit.
+Python 3.11 is required because `deepiri-gpu-utils` requires Python 3.11.
+`pyproject.toml` pins the upstream Git **tag** `v0.2.0` (not a commit SHA), matching
+the org convention used for other git dependencies.
 
 For development with sibling checkouts:
 
@@ -67,9 +67,8 @@ deepiri-ollama-utils recommend-models
 deepiri-ollama-utils recommend-models --backend-hint cuda --json
 ```
 
-This combines `deepiri_gpu_utils.ollama.recommend_models`,
-`curated_models`, `curated_model_ids`, `categorize_model`, and
-`setup_tier` with the models currently installed in Ollama.
+This combines `deepiri_ollama.tiers` recommendation helpers with the models
+currently installed in Ollama. Hardware detection uses `deepiri-gpu-utils`.
 
 ### Inspect fit, workload, and capacity
 
@@ -80,12 +79,13 @@ deepiri-ollama-utils workload --model mistral:7b --context-tokens 8192
 deepiri-ollama-utils capacity --model mistral:7b --reserved-gb 2
 ```
 
-These commands call the corresponding library primitives directly:
+These commands use local sizing modules backed by `deepiri-gpu-utils` hardware
+detection:
 
-- `deepiri_gpu_utils.model_fit.model_fit_check`
-- `deepiri_gpu_utils.model_matrix.model_fit_matrix`
-- `deepiri_gpu_utils.workload.estimate_workload`
-- `deepiri_gpu_utils.capacity.model_capacity`
+- `deepiri_ollama.model_fit.model_fit_check`
+- `deepiri_ollama.model_matrix.model_fit_matrix`
+- `deepiri_ollama.workload.estimate_workload`
+- `deepiri_ollama.capacity.model_capacity`
 
 The estimates are advisory. Quantization, context length, batching, and current
 GPU memory use can change actual Ollama requirements.
