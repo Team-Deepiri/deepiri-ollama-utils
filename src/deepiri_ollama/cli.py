@@ -280,10 +280,7 @@ def _run_management(args: argparse.Namespace) -> int:
             return 0
 
         if args.command == "model-matrix":
-            from deepiri_gpu_utils.model_matrix import (
-                model_fit_matrix,
-                render_model_matrix_text,
-            )
+            from .model_matrix import model_fit_matrix, render_model_matrix_text
 
             matrix = model_fit_matrix()
             if args.json:
@@ -327,7 +324,7 @@ def _run_management(args: argparse.Namespace) -> int:
             return 0 if result.success else 1
 
         if args.command == "model-fit":
-            from deepiri_gpu_utils.model_fit import model_fit_check
+            from .model_fit import model_fit_check
 
             result = model_fit_check(model, backend_hint=args.backend_hint)
             if args.json:
@@ -341,7 +338,7 @@ def _run_management(args: argparse.Namespace) -> int:
             return 0
 
         if args.command == "workload":
-            from deepiri_gpu_utils.workload import estimate_workload
+            from .workload import estimate_workload
 
             result = estimate_workload(model, context_tokens=args.context_tokens)
             if args.json:
@@ -356,7 +353,7 @@ def _run_management(args: argparse.Namespace) -> int:
             return 0
 
         if args.command == "capacity":
-            from deepiri_gpu_utils.capacity import model_capacity
+            from .capacity import model_capacity
 
             result = model_capacity(
                 model,
@@ -375,9 +372,7 @@ def _run_management(args: argparse.Namespace) -> int:
         _emit(
             {
                 "ok": False,
-                "message": (
-                    "deepiri-gpu-utils is required for model-management commands"
-                ),
+                "message": "deepiri-gpu-utils is required for hardware detection",
                 "error": str(exc),
             }
         )

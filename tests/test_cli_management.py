@@ -1,7 +1,7 @@
 import json
 from types import SimpleNamespace
 
-from deepiri_gpu_utils.model_fit import ModelFitResult
+from deepiri_ollama.model_fit import ModelFitResult
 
 from deepiri_ollama import cli
 from deepiri_ollama.model_management import (
@@ -104,7 +104,7 @@ def test_cli_model_fit_calls_gpu_primitive(monkeypatch, capsys):
         )
 
     monkeypatch.setattr(
-        "deepiri_gpu_utils.model_fit.model_fit_check",
+        "deepiri_ollama.model_fit.model_fit_check",
         fake_model_fit,
     )
     assert (

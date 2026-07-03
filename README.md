@@ -67,9 +67,8 @@ deepiri-ollama-utils recommend-models
 deepiri-ollama-utils recommend-models --backend-hint cuda --json
 ```
 
-This combines `deepiri_gpu_utils.ollama.recommend_models`,
-`curated_models`, `curated_model_ids`, `categorize_model`, and
-`setup_tier` with the models currently installed in Ollama.
+This combines `deepiri_ollama.tiers` recommendation helpers with the models
+currently installed in Ollama. Hardware detection uses `deepiri-gpu-utils`.
 
 ### Inspect fit, workload, and capacity
 
@@ -80,12 +79,13 @@ deepiri-ollama-utils workload --model mistral:7b --context-tokens 8192
 deepiri-ollama-utils capacity --model mistral:7b --reserved-gb 2
 ```
 
-These commands call the corresponding library primitives directly:
+These commands use local sizing modules backed by `deepiri-gpu-utils` hardware
+detection:
 
-- `deepiri_gpu_utils.model_fit.model_fit_check`
-- `deepiri_gpu_utils.model_matrix.model_fit_matrix`
-- `deepiri_gpu_utils.workload.estimate_workload`
-- `deepiri_gpu_utils.capacity.model_capacity`
+- `deepiri_ollama.model_fit.model_fit_check`
+- `deepiri_ollama.model_matrix.model_fit_matrix`
+- `deepiri_ollama.workload.estimate_workload`
+- `deepiri_ollama.capacity.model_capacity`
 
 The estimates are advisory. Quantization, context length, batching, and current
 GPU memory use can change actual Ollama requirements.

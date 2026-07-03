@@ -1,22 +1,21 @@
-"""GPU-aware Ollama model management built from deepiri-gpu-utils primitives."""
+"""GPU-aware Ollama model management."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from deepiri_gpu_utils.capacity import ModelCapacity, model_capacity
-from deepiri_gpu_utils.model_fit import ModelFitResult, model_fit_check
-from deepiri_gpu_utils.model_matrix import ModelMatrix, model_fit_matrix
-from deepiri_gpu_utils.ollama import (
+from .capacity import ModelCapacity, model_capacity
+from .client import OllamaAPIError, OllamaClient, OllamaReadiness, PullResult
+from .model_fit import ModelFitResult, model_fit_check
+from .model_matrix import ModelMatrix, model_fit_matrix
+from .tiers import (
     categorize_model,
     curated_model_ids,
     curated_models,
     recommend_models,
     setup_tier,
 )
-from deepiri_gpu_utils.workload import WorkloadEstimate, estimate_workload
-
-from .client import OllamaAPIError, OllamaClient, OllamaReadiness, PullResult
+from .workload import WorkloadEstimate, estimate_workload
 
 
 @dataclass(frozen=True)
