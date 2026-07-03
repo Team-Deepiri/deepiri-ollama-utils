@@ -13,9 +13,9 @@ VRAM, model-fit, workload, and capacity decisions come directly from the
 - Ollama for commands that inspect or modify installed models
 - `deepiri-gpu-utils` for recommendation and sizing commands
 
-Python 3.11 is required because the inspected `deepiri-gpu-utils` package
-requires Python 3.11. Until a tagged release containing the model-management
-APIs is confirmed, `pyproject.toml` pins the exact inspected upstream commit.
+Python 3.11 is required because `deepiri-gpu-utils` requires Python 3.11.
+`pyproject.toml` pins the upstream Git **tag** `v0.2.0` (not a commit SHA), matching
+the org convention used for other git dependencies.
 
 For development with sibling checkouts:
 
