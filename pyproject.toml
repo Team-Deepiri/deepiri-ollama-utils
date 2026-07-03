@@ -9,7 +9,7 @@ description = "Shared Ollama client, model management, and runtime helpers"
 requires-python = ">=3.11"
 dependencies = [
   "httpx>=0.27",
-  "deepiri-gpu-utils @ git+https://github.com/Team-Deepiri/deepiri-gpu-utils.git@d1f8e92",
+  "deepiri-gpu-utils @ git+https://github.com/Team-Deepiri/deepiri-gpu-utils.git@d1f8e92d5ec38f9a839ac9bade04cd71edd219b1",
 ]
 
 [project.optional-dependencies]
